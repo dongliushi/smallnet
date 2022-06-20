@@ -1,9 +1,11 @@
 #pragma once
+
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 
 class EventLoop;
+
 class EventLoopThread {
 public:
   EventLoopThread();

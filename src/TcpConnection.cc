@@ -1,6 +1,7 @@
 #include "TcpConnection.h"
 #include "Channel.h"
 #include "EventLoop.h"
+#include "Logger.h"
 #include "Socket.h"
 #include <memory>
 #include <unistd.h>
@@ -51,7 +52,7 @@ void TcpConnection::handleRead() {
     handleClose();
   } else {
     errno = savedErrno;
-    //   LOG_SYSERR << "TcpConnection::handleRead";
+    LOG_DEBUG << "TcpConnection::handleRead";
     handleError();
   }
 }
@@ -74,15 +75,11 @@ void TcpConnection::handleWrite() {
         }
       }
     } else {
-      //       LOG_SYSERR << "TcpConnection::handleWrite";
-      // if (state_ == TcpConnectionState::Disconnecting)
-      // {
-      //   shutdownInLoop();
-      // }
+      LOG_DEBUG << "TcpConnection::ERROR::handleWrite";
     }
   } else {
-    //     LOG_TRACE << "Connection fd = " << channel_->fd()
-    //               << " is down, no more writing";
+    LOG_DEBUG << "Connection fd = " << std::to_string(channel_->fd())
+              << " is down, no more writing";
   }
 }
 
@@ -97,11 +94,7 @@ void TcpConnection::handleClose() {
   closeCallback_(guardThis);
 }
 
-void TcpConnection::handleError() {
-  //   int err = sockets::getSocketError(channel_->fd());
-  //   LOG_ERROR << "TcpConnection::handleError [" << name_
-  //             << "] - SO_ERROR = " << err << " " << strerror_tl(err);
-}
+void TcpConnection::handleError() { LOG_DEBUG << "TcpConnection::handleError"; }
 
 void TcpConnection::shutdownInLoop() {
   loop_->assertInLoopThread();

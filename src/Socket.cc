@@ -1,7 +1,6 @@
 #include "Socket.h"
 #include <cassert>
 #include <cstring>
-#include <iostream>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <sys/socket.h>

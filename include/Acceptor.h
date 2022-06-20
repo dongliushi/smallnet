@@ -1,13 +1,16 @@
 #pragma once
-#include "Callbacks.h"
+
 #include "Channel.h"
-#include "NetAddr.h"
 #include "Socket.h"
 #include <functional>
 
 class EventLoop;
+class NetAddr;
 
 class Acceptor {
+  typedef std::function<void(int sockfd, const NetAddr &peerAddr)>
+      NewConnectionCallback;
+
 public:
   Acceptor(EventLoop *loop, const NetAddr &local);
   ~Acceptor();

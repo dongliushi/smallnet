@@ -2,7 +2,6 @@
 #include "Channel.h"
 #include "EventLoop.h"
 #include <cassert>
-#include <iostream>
 #include <unistd.h>
 
 int creatSocket() {

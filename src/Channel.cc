@@ -1,7 +1,6 @@
 #include "Channel.h"
 #include "EventLoop.h"
 #include <cassert>
-#include <iostream>
 
 Channel::Channel(EventLoop *loop, int fd)
     : loop_(loop), fd_(fd), tied_(false), events_(0), revents_(0),

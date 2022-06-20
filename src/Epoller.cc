@@ -1,12 +1,13 @@
 #include "Epoller.h"
+#include "Channel.h"
 #include "EventLoop.h"
 #include <cassert>
 #include <sys/epoll.h>
 #include <unistd.h>
-#include <iostream>
 
 Epoller::Epoller(EventLoop *loop)
-    : loop_(loop), epollfd_(epoll_create1(EPOLL_CLOEXEC)),events_(EventsInitSize_) {}
+    : loop_(loop), epollfd_(epoll_create1(EPOLL_CLOEXEC)),
+      events_(EventsInitSize_) {}
 
 Epoller::~Epoller() { close(epollfd_); }
 

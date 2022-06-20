@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Buffer.h"
 #include "Callbacks.h"
 #include "NetAddr.h"
@@ -8,6 +9,7 @@
 class EventLoop;
 class Socket;
 class Channel;
+
 class TcpConnection : public std::enable_shared_from_this<TcpConnection> {
 
 public:

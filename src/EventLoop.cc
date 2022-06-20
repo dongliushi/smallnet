@@ -1,6 +1,8 @@
 #include "EventLoop.h"
+#include "Channel.h"
+#include "Epoller.h"
+#include "Logger.h"
 #include <cassert>
-#include <iostream>
 #include <sys/eventfd.h>
 #include <syscall.h>
 #include <unistd.h>
@@ -78,7 +80,8 @@ void EventLoop::wakeup() {
   uint64_t one = 1;
   ssize_t n = write(wakeupFd_, &one, sizeof(one));
   if (n != sizeof(one)) {
-    // SYSERR("EventLoop::wakeup() should ::write() %lu bytes", sizeof(one));
+    LOG_DEBUG << "EventLoop::wakeup() should ::write() "
+              << std::to_string(sizeof(one)) << "bytes";
   }
 }
 

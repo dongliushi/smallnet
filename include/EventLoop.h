@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Channel.h"
-#include "Epoller.h"
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <mutex>
+#include <vector>
+
+class Channel;
+class Epoller;
 
 class EventLoop {
   typedef std::function<void()> Task;

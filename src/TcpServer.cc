@@ -4,7 +4,7 @@
 #include "TcpConnection.h"
 #include <cassert>
 #include <functional>
-#include <iostream>
+#include "Acceptor.h"
 #include <memory>
 
 void defaultConnectionCallback(const TcpConnectionPtr &conn) {}

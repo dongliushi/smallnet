@@ -12,5 +12,6 @@ NetAddr.cc
 Socket.cc
 TcpConnection.cc
 TcpServer.cc
+Logger.cc
 )
 target_link_libraries(test ${CMAKE_THREAD_LIBS_INIT})

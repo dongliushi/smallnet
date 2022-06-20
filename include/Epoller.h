@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Channel.h"
 #include <sys/epoll.h>
 #include <vector>
+
+class Channel;
+class EventLoop;
 
 class Epoller {
 public:

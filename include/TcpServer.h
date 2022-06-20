@@ -1,5 +1,5 @@
 #pragma once
-#include "Acceptor.h"
+
 #include "Callbacks.h"
 #include "NetAddr.h"
 #include <atomic>
@@ -7,6 +7,7 @@
 #include <memory>
 #include <unordered_set>
 
+class Acceptor;
 class EventLoopThreadPool;
 class EventLoop;
 class TcpConnection;
