@@ -29,6 +29,8 @@ public:
     highWaterMarkCallback_ = cb;
     // highWaterMark_ = highWaterMark;
   }
+  NetAddr &localAddr() { return localAddr_; }
+  NetAddr &peerAddr() { return peerAddr_; }
   void setCloseCallback(const CloseCallback &cb) { closeCallback_ = cb; }
   EventLoop *getLoop() const { return loop_; }
   void connectEstablished();

@@ -1,16 +1,21 @@
 #include "TcpServer.h"
+#include "Acceptor.h"
 #include "EventLoop.h"
 #include "EventLoopThreadPool.h"
+#include "Logger.h"
 #include "TcpConnection.h"
 #include <cassert>
 #include <functional>
-#include "Acceptor.h"
 #include <memory>
 
-void defaultConnectionCallback(const TcpConnectionPtr &conn) {}
+void defaultConnectionCallback(const TcpConnectionPtr &conn) {
+  LOG_DEBUG << conn->localAddr().getIp() << ":" << conn->localAddr().getPort()
+            << " -> " << conn->peerAddr().getIp() << ":"
+            << conn->peerAddr().getPort();
+}
 
 void defaultMessageCallback(const TcpConnectionPtr &, Buffer &buf) {
-  // buf.retrieveAll();
+  buf.retrieveAll();
 }
 
 TcpServer::TcpServer(EventLoop *loop, const NetAddr &localAddr, int threadNums)
