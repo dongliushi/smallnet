@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <sstream>
+#include <syscall.h>
 #include <unistd.h>
 
 Logger::Logger(LogLevel logLevel, const char *fileName, int line)
@@ -12,10 +13,9 @@ Logger::Logger(LogLevel logLevel, const char *fileName, int line)
 Logger::Logger(LogLevel logLevel, const char *fileName, int line,
                const char *func)
     : logLevel_(logLevel), line_(line), fileName_(fileName) {
-  std::stringstream ss;
-  ss << std::this_thread::get_id();
   *this << "[Date: " << __DATE__ << "]:[Time: " << __TIME__
-        << "]:[Func: " << func << "]:[Tid: " << ss.str() << "] ";
+        << "]:[Func: " << func
+        << "]:[Tid: " << static_cast<pid_t>(syscall(SYS_gettid)) << "] ";
 }
 
 Logger::~Logger() {
@@ -28,6 +28,13 @@ Logger::LogLevel g_logLevel = Logger::LogLevel::INFO;
 
 Logger &Logger::operator<<(const std::string &log) {
   for (auto &ch : log) {
+    buffer_.emplace_back(ch);
+  }
+  return *this;
+}
+
+Logger &Logger::operator<<(int log) {
+  for (auto &ch : std::to_string(log)) {
     buffer_.emplace_back(ch);
   }
   return *this;

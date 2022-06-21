@@ -23,6 +23,7 @@ public:
   static LogLevel logLevel();
   static void setLogLevel(LogLevel logLevel);
   Logger &operator<<(const std::string &log);
+  Logger &operator<<(int log);
 
 private:
   LogLevel logLevel_;
@@ -43,5 +44,3 @@ inline void Logger::setLogLevel(Logger::LogLevel level) {
 
 #define LOG_DEBUG                                                              \
   Logger(Logger::LogLevel::INFO, __FILE__, __LINE__, __func__).stream()
-
-class AsyncLogger {};

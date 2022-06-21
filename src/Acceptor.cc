@@ -1,5 +1,6 @@
 #include "Acceptor.h"
 #include "Channel.h"
+#include "Logger.h"
 #include "EventLoop.h"
 #include <cassert>
 #include <unistd.h>

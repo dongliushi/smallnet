@@ -9,12 +9,12 @@ EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, int threadNums)
   assert(threadNums_ > 0);
 }
 
-EventLoopThreadPool::~EventLoopThreadPool() {}
+EventLoopThreadPool::~EventLoopThreadPool() { assert(started_); }
 
 void EventLoopThreadPool::start() {
   baseLoop_->assertInLoopThread();
   started_ = true;
-  for (int i = 0; i < threadNums_; ++i) {
+  for (int i = 0; i < threadNums_; i++) {
     std::shared_ptr<EventLoopThread> t(new EventLoopThread());
     threads_.emplace_back(t);
     loops_.emplace_back(t->startLoop());

@@ -78,7 +78,7 @@ void TcpConnection::handleWrite() {
       LOG_DEBUG << "TcpConnection::ERROR::handleWrite";
     }
   } else {
-    LOG_DEBUG << "Connection fd = " << std::to_string(channel_->fd())
+    LOG_DEBUG << "Connection fd = " << channel_->fd()
               << " is down, no more writing";
   }
 }

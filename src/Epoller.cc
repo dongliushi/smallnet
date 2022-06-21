@@ -1,6 +1,7 @@
 #include "Epoller.h"
 #include "Channel.h"
 #include "EventLoop.h"
+#include "Logger.h"
 #include <cassert>
 #include <sys/epoll.h>
 #include <unistd.h>
@@ -16,7 +17,7 @@ void Epoller::poll(std::vector<Channel *> &activeChannels, int timeoutMs) {
   int numEvents = epoll_wait(epollfd_, events_.data(), maxEvents, timeoutMs);
   if (numEvents == -1) {
     if (errno != EINTR) {
-      // SYSERR("EPoller::epoll_wait()");
+      LOG_DEBUG << "EPoller::epoll_wait()";
     }
   } else if (numEvents > 0) {
     for (int i = 0; i < numEvents; i++) {

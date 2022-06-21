@@ -21,9 +21,7 @@ public:
   void removeChannel(Channel *channel);
   void assertInLoopThread();
   bool isInLoopThread();
-  void runInLoop(const Task &task);
   void runInLoop(Task &&task);
-  void queueInLoop(const Task &task);
   void queueInLoop(Task &&task);
   void wakeup();
   void handleWakeUpRead();

@@ -44,27 +44,11 @@ void EventLoop::quit() {
   }
 }
 
-void EventLoop::runInLoop(const Task &task) {
-  if (isInLoopThread())
-    task();
-  else
-    queueInLoop(task);
-}
-
 void EventLoop::runInLoop(Task &&task) {
   if (isInLoopThread())
     task();
   else
     queueInLoop(std::move(task));
-}
-
-void EventLoop::queueInLoop(const Task &task) {
-  {
-    std::unique_lock<std::mutex> lock(mutex_);
-    pendingTasks_.emplace_back(task);
-  }
-  if (!isInLoopThread() || doingPendingTasks_)
-    wakeup();
 }
 
 void EventLoop::queueInLoop(Task &&task) {
@@ -80,8 +64,8 @@ void EventLoop::wakeup() {
   uint64_t one = 1;
   ssize_t n = write(wakeupFd_, &one, sizeof(one));
   if (n != sizeof(one)) {
-    LOG_DEBUG << "EventLoop::wakeup() should ::write() "
-              << std::to_string(sizeof(one)) << "bytes";
+    LOG_DEBUG << "EventLoop::wakeup() should ::write() " << sizeof(one)
+              << "bytes";
   }
 }
 
