@@ -102,3 +102,44 @@ void TcpConnection::shutdownInLoop() {
     socket_->shutdownWrite();
   }
 }
+
+void TcpConnection::send(const std::string &data) {
+  if (state_ == TcpConnectionState::Connected) {
+    if (loop_->isInLoopThread()) {
+      sendInLoop(data);
+    }
+  }
+}
+
+void TcpConnection::sendInLoop(const std::string &data) {
+  loop_->assertInLoopThread();
+  size_t len = data.size();
+  ssize_t nwrote = 0;
+  size_t remaining = len;
+  if (state_ == TcpConnectionState::Disconnected) {
+    LOG_DEBUG << "disconnected, give up writing";
+    return;
+  }
+  if (!channel_->isWriting() && outputBuffer_.readableBytes() == 0) {
+    nwrote = write(channel_->fd(), data.c_str(), len);
+    if (nwrote >= 0) {
+      remaining = len - nwrote;
+      if (remaining == 0 && writeCompleteCallback_) {
+        loop_->queueInLoop(
+            std::bind(writeCompleteCallback_, shared_from_this()));
+      }
+    } else {
+      nwrote = 0;
+      if (errno != EWOULDBLOCK) {
+        LOG_DEBUG << "TcpConnection::sendInLoop";
+      }
+    }
+  }
+  assert(remaining <= len);
+  if (remaining > 0) {
+    outputBuffer_.append(data.c_str() + nwrote, remaining);
+    if (!channel_->isWriting()) {
+      channel_->enableWrite();
+    }
+  }
+}

@@ -24,18 +24,16 @@ public:
   void setWriteCompleteCallback(const WriteCompleteCallback &cb) {
     writeCompleteCallback_ = cb;
   }
-  void setHighWaterMarkCallback(const HighWaterMarkCallback &cb,
-                                size_t highWaterMark) {
-    highWaterMarkCallback_ = cb;
-    // highWaterMark_ = highWaterMark;
-  }
+  void setCloseCallback(const CloseCallback &cb) { closeCallback_ = cb; }
+
   NetAddr &localAddr() { return localAddr_; }
   NetAddr &peerAddr() { return peerAddr_; }
-  void setCloseCallback(const CloseCallback &cb) { closeCallback_ = cb; }
   EventLoop *getLoop() const { return loop_; }
+
   void connectEstablished();
   void connectDestroyed();
 
+  void send(const std::string& data);
 private:
   enum class TcpConnectionState {
     Connecting,
@@ -48,6 +46,7 @@ private:
   void handleWrite();
   void handleClose();
   void handleError();
+  void sendInLoop(const std::string& data);
   void setState(TcpConnectionState state) { state_ = state; }
   void shutdownInLoop();
 
@@ -62,6 +61,5 @@ private:
   ConnectionCallback connectionCallback_;
   MessageCallback messageCallback_;
   WriteCompleteCallback writeCompleteCallback_;
-  HighWaterMarkCallback highWaterMarkCallback_;
   CloseCallback closeCallback_;
 };
