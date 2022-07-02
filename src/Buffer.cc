@@ -1,5 +1,7 @@
 #include "Buffer.h"
 
+const char Buffer::CRLF[] = "\r\n";
+
 ssize_t Buffer::readFd(int fd, int *savedErrno) {
   char extrabuf[65536];
   struct iovec vec[2];

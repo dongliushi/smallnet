@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cerrno>
 #include <string>
@@ -35,6 +36,22 @@ public:
   size_t prependableBytes() { return read_index_; }
 
   const char *peek() const { return begin() + read_index_; }
+
+  char *beginWrite() { return begin() + write_index_; }
+
+  const char *beginWrite() const { return begin() + write_index_; }
+
+  const char *findCRLF() const {
+    const char *crlf = std::search(peek(), beginWrite(), CRLF, CRLF + 2);
+    return crlf == beginWrite() ? NULL : crlf;
+  }
+
+  const char *findCRLF(const char *start) const {
+    assert(peek() <= start);
+    assert(start <= beginWrite());
+    const char *crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
+    return crlf == beginWrite() ? NULL : crlf;
+  }
 
   void ensureWriteableBytes(size_t len) {
     if (writeableBytes() < len)
@@ -101,4 +118,5 @@ private:
   std::vector<char> buffer_;
   size_t read_index_;
   size_t write_index_;
+  static const char CRLF[];
 };
