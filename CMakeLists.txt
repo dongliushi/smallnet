@@ -1,15 +1,18 @@
-project(net)
 cmake_minimum_required(VERSION 3.24)
 
-set(CMAKE_C_COMPILER /opt/rh/devtoolset-9/root/bin/gcc)
-set(CMAKE_CXX_COMPILER /opt/rh/devtoolset-9/root/bin/g++)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-find_package(Threads)
+project(smallnet LANGUAGES CXX)
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 add_subdirectory(src)
 
-add_executable(test test.cc)
 
-target_link_libraries(test PUBLIC FXH_NET)
-target_link_libraries(test PUBLIC ${CMAKE_THREAD_LIBS_INIT})
