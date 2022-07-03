@@ -29,11 +29,12 @@ public:
   NetAddr &localAddr() { return localAddr_; }
   NetAddr &peerAddr() { return peerAddr_; }
   EventLoop *getLoop() const { return loop_; }
-
+  void shutdown();
   void connectEstablished();
   void connectDestroyed();
+  void forceClose();
+  void send(const std::string &data);
 
-  void send(const std::string& data);
 private:
   enum class TcpConnectionState {
     Connecting,
@@ -46,10 +47,10 @@ private:
   void handleWrite();
   void handleClose();
   void handleError();
-  void sendInLoop(const std::string& data);
+  void sendInLoop(const std::string &data);
   void setState(TcpConnectionState state) { state_ = state; }
   void shutdownInLoop();
-
+  void forceCloseInLoop();
   EventLoop *loop_;
   std::unique_ptr<Socket> socket_;
   std::unique_ptr<Channel> channel_;

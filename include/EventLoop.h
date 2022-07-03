@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TimerQueue.h"
 #include <atomic>
 #include <functional>
 #include <memory>
@@ -23,6 +24,12 @@ public:
   bool isInLoopThread();
   void runInLoop(Task &&task);
   void queueInLoop(Task &&task);
+  Timer *runAt(TimeStamp when, const Timer::TimerCallback &callback);
+  Timer *runAfter(Timer::nanoseconds interval,
+                  const Timer::TimerCallback &callback);
+  Timer *runEvery(Timer::nanoseconds interval,
+                  const Timer::TimerCallback &callback);
+  void cancelTimer(Timer *timer);
   void wakeup();
   void handleWakeUpRead();
   void doPendingTasks();
@@ -37,4 +44,5 @@ private:
   std::vector<Task> pendingTasks_;
   const int wakeupFd_;
   std::unique_ptr<Channel> wakeupChannel_;
+  TimerQueue timerQueue_;
 };

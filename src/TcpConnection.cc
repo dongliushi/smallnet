@@ -23,6 +23,13 @@ TcpConnection::~TcpConnection() {
   assert(state_ == TcpConnectionState::Disconnected);
 }
 
+void TcpConnection::shutdown() {
+  if (state_ == TcpConnectionState::Connected) {
+    setState(TcpConnectionState::Disconnecting);
+    loop_->runInLoop(std::bind(&TcpConnection::shutdownInLoop, this));
+  }
+}
+
 void TcpConnection::connectEstablished() {
   loop_->assertInLoopThread();
   assert(state_ == TcpConnectionState::Connecting);
@@ -141,5 +148,22 @@ void TcpConnection::sendInLoop(const std::string &data) {
     if (!channel_->isWriting()) {
       channel_->enableWrite();
     }
+  }
+}
+
+void TcpConnection::forceClose() {
+  if (state_ == TcpConnectionState::Connected ||
+      state_ == TcpConnectionState::Disconnecting) {
+    setState(TcpConnectionState::Disconnecting);
+    loop_->queueInLoop(
+        std::bind(&TcpConnection::forceCloseInLoop, shared_from_this()));
+  }
+}
+
+void TcpConnection::forceCloseInLoop() {
+  loop_->assertInLoopThread();
+  if (state_ == TcpConnectionState::Connected ||
+      state_ == TcpConnectionState::Disconnecting) {
+    handleClose();
   }
 }

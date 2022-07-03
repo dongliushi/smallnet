@@ -43,14 +43,14 @@ public:
 
   const char *findCRLF() const {
     const char *crlf = std::search(peek(), beginWrite(), CRLF, CRLF + 2);
-    return crlf == beginWrite() ? NULL : crlf;
+    return crlf == beginWrite() ? nullptr : crlf;
   }
 
   const char *findCRLF(const char *start) const {
     assert(peek() <= start);
     assert(start <= beginWrite());
     const char *crlf = std::search(start, beginWrite(), CRLF, CRLF + 2);
-    return crlf == beginWrite() ? NULL : crlf;
+    return crlf == beginWrite() ? nullptr : crlf;
   }
 
   void ensureWriteableBytes(size_t len) {

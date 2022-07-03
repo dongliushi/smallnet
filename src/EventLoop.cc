@@ -13,7 +13,7 @@ EventLoop::EventLoop()
     : threadId_(gettid()), epoller_(new Epoller(this)), quit_(false),
       doingPendingTasks_(false),
       wakeupFd_(eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK)),
-      wakeupChannel_(new Channel(this, wakeupFd_)) {
+      wakeupChannel_(new Channel(this, wakeupFd_)), timerQueue_(this) {
   assert(wakeupFd_ != -1);
   wakeupChannel_->setReadCallback(
       std::bind(&EventLoop::handleWakeUpRead, this));
@@ -59,6 +59,22 @@ void EventLoop::queueInLoop(Task &&task) {
   if (!isInLoopThread() || doingPendingTasks_)
     wakeup();
 }
+
+Timer *EventLoop::runAt(TimeStamp when, const Timer::TimerCallback &callback) {
+  return timerQueue_.addTimer(when, Timer::milliseconds::zero(), callback);
+}
+
+Timer *EventLoop::runAfter(Timer::nanoseconds interval,
+                           const Timer::TimerCallback &callback) {
+  return runAt(::now() + interval, callback);
+}
+
+Timer *EventLoop::runEvery(Timer::nanoseconds interval,
+                           const Timer::TimerCallback &callback) {
+  return timerQueue_.addTimer(::now() + interval, interval, callback);
+}
+
+void EventLoop::cancelTimer(Timer *timer) { timerQueue_.cancelTimer(timer); }
 
 void EventLoop::wakeup() {
   uint64_t one = 1;

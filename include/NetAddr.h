@@ -9,6 +9,7 @@ class NetAddr {
 public:
   NetAddr(size_t port = 0, bool loopback = false);
   NetAddr(const std::string &ip, size_t port);
+  explicit NetAddr(const struct sockaddr_in &addr) : addr_(addr) {}
   void setAddress(const sockaddr_in &addr) { addr_ = addr; }
   std::string getIp() {
     char ip[INET_ADDRSTRLEN];
