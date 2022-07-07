@@ -17,6 +17,9 @@ public:
   void connect();
   void disconnect();
   void stop();
+  bool isConnected();
+  bool isConnecting();
+  bool isDisconnected();
   TcpConnectionPtr connection() const { return connection_; };
   EventLoop *getLoop() const { return loop_; }
   bool retry() const { return retry_; }

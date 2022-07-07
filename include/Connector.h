@@ -18,6 +18,7 @@ public:
   void start();
   void restart();
   void stop();
+  States state() const { return state_; }
   const NetAddr &serverAddress() const { return serverAddr_; }
   void setState(States s) { state_ = s; }
   void startInLoop();

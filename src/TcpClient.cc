@@ -86,6 +86,19 @@ void TcpClient::stop() {
   connector_->stop();
 }
 
+bool TcpClient::isConnected() {
+  return connector_->state() == Connector::States::Connected;
+}
+
+
+bool TcpClient::isConnecting() {
+  return connector_->state() == Connector::States::Connecting;
+}
+
+bool TcpClient::isDisconnected() {
+  return connector_->state() == Connector::States::Disconnected;
+}
+
 void TcpClient::newConnection(int sockfd) {
   loop_->assertInLoopThread();
   NetAddr peerAddr(getPeerAddr(sockfd));

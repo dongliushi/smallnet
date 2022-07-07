@@ -13,8 +13,7 @@ Logger::Logger(LogLevel logLevel, const char *fileName, int line)
 Logger::Logger(LogLevel logLevel, const char *fileName, int line,
                const char *func)
     : logLevel_(logLevel), line_(line), fileName_(fileName) {
-  *this << "[Date: " << __DATE__ << "]:[Time: " << __TIME__
-        << "]:[Func: " << func
+  *this << "[Func: " << func
         << "]:[Tid: " << static_cast<pid_t>(syscall(SYS_gettid)) << "] ";
 }
 
